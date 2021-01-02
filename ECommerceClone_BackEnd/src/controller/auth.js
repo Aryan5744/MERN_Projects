@@ -1,5 +1,6 @@
 const User = require('../models/user');
 const jwt = require('jsonwebtoken');
+const { requireSignIn } = require('../common-middleware');
 
 module.exports.signup = (req , res) => {
     User.findOne({email : req.body.email})
@@ -51,6 +52,7 @@ exports.signin = (req, res) => {
                 );
 
                 const {  _id , firstName , lastName , email , role , fullName } = user;
+                res.cookie('token', token, {expiresIn : '1h'});
                 res.status(200).json({
                     token,
                     user : {_id , firstName , lastName , email , role , fullName}
@@ -66,4 +68,3 @@ exports.signin = (req, res) => {
         }
     })
 }
-
