@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import './style.css'
-import {useSelector, useDispatch} from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { getAllCategory } from '../../actions';
 import categoryReducer from '../../reducers/category.reducer';
 /**
@@ -14,7 +14,7 @@ const MenuHeader = (props) => {
 
   useEffect(() => {
     dispatch(getAllCategory());
-  },[]);
+  }, []);
 
   const renderCategories = (categories) => {
     let myCategories = [];
@@ -22,14 +22,16 @@ const MenuHeader = (props) => {
       myCategories.push(
         <li key={category.name}>
           {
-            category.parentId 
-            ? <a href = {category.slug}>{category.name}</a> 
-            : <span>{category.name}</span>
+            category.parentId
+              ? <a href={`/${category.slug}?cid=${category._id}&type=${category.type}`}>
+                {category.name}
+              </a>
+              : <span>{category.name}</span>
           }
           {
             category.children.length > 0
-            ? (<ul>{renderCategories(category.children)}</ul>)
-            : null
+              ? (<ul>{renderCategories(category.children)}</ul>)
+              : null
           }
         </li>
       );

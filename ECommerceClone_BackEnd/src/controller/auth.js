@@ -46,16 +46,15 @@ exports.signin = (req, res) => {
     .exec((error , user) => {
         if(error) return res.status(404).json({error});
         if(user){
-            
-            if(user.authenticate(req.body.password)){
+            if(user.authenticate(req.body.password) && user.role === 'user'){
                 const token = jwt.sign(
                     {_id : user._id, role : user.role}, 
                     process.env.JWT_SECRET,
-                    {expiresIn : '1h'}
+                    {expiresIn : '24h'}
                 );
 
                 const {  _id , firstName , lastName , email , role , fullName } = user;
-                res.cookie('token', token, {expiresIn : '1h'});
+                // res.cookie('token', token, {expiresIn : '1h'});
                 res.status(200).json({
                     token,
                     user : {_id , firstName , lastName , email , role , fullName}
@@ -67,7 +66,7 @@ exports.signin = (req, res) => {
                 });
             }
         }else{
-            return res.status(400).json({ message : 'Something went wrong !!' });
+            return res.status(500).json({ message : 'Something went wrong !!' });
         }
     })
 }

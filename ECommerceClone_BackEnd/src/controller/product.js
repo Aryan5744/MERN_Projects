@@ -57,7 +57,8 @@ exports.getProductsBySlug = (req, res) => {
                             under10K : products.filter(product => product.price > 5000 && product.price <= 10000),
                             under15K : products.filter(product => product.price > 10000 && product.price <= 15000),
                             under20K : products.filter(product => product.price > 15000 && product.price <= 20000),
-                            under25K : products.filter(product => product.price > 20000 && product.price <= 25000)
+                            under25K : products.filter(product => product.price > 20000 && product.price <= 25000),
+                            under50K : products.filter(product => product.price > 25000 && product.price <= 50000)
                         }
                     });
     
@@ -66,3 +67,14 @@ exports.getProductsBySlug = (req, res) => {
         }
     });
 }
+exports.getProductDetailsById = (req, res) => {
+    const { productId } = req.params;
+    if (productId) {
+      Product.findOne({ _id: productId }).exec((error, product) => {
+        if (error) return res.status(400).json({ error });
+        if (product) return res.status(200).json({ product });
+      });
+    } else {
+      return res.status(400).json({ error: "Params required" });
+    }
+  };

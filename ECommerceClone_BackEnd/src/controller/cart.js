@@ -34,3 +34,24 @@ exports.addItemToCart = (req , res) => {
         }
     });
 };
+
+exports.getCartItems = (req, res) => {
+    Cart.findOne({user : req.user._id})
+    .populate('cartItems.product', '_id name price productPictures')
+    .exec((error, cart) => {
+        if(error) return res.status(400).json({error});
+        if(cart){
+            let cartItems = {};
+            cart.cartItems.forEach(element => {
+                cartItems[element.product._id.toString()] = {
+                    _id : element.product._id.toString(),
+                    name : element.product.name,
+                    price : element.product.price,
+                    img : element.product.productPictures[0].img,
+                    qty : element.quantity
+                }
+            });
+            res.status(200).json({cartItems});
+        }
+    })
+}

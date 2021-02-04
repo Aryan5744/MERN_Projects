@@ -17,6 +17,7 @@ const buildNewCategories = (_parentId, existingCategories, newCategory) => {
                 _id: newCategory._id,
                 name: newCategory.name,
                 slug: newCategory.slug,
+                type : newCategory.type,
                 children: []
             }
         ];
@@ -28,11 +29,12 @@ const buildNewCategories = (_parentId, existingCategories, newCategory) => {
                 name: newCategory.name,
                 slug: newCategory.slug,
                 parentId: newCategory.parentId,
+                type : newCategory.type,
                 children: []
             };
             myCategories.push({
                 ...cat,
-                children: cat.children.length > 0 ? [...cat.children, newCategoryObject] : [newCategoryObject] 
+                children: cat.children.length > 0 ? [...cat.children, newCategoryObject] : [newCategoryObject]
             });
         }
         else {
@@ -74,7 +76,47 @@ export default (state = initialState, action) => {
 
         case categoryConstants.ADD_NEW_CATEGORY_FAILURE:
             state = {
-                ...initialState
+                ...initialState,
+                loading: false,
+                error : action.payload.error
+            }
+            break;
+        case categoryConstants.UPDATE_CATEGORY_REQUEST:
+            state = {
+                ...state,
+                loading: true
+            }
+            break;
+        case categoryConstants.UPDATE_CATEGORY_SUCCESS:
+            state = {
+                ...state,
+                loading: false
+            }
+            break;
+        case categoryConstants.UPDATE_CATEGORY_FAILURE:
+            state = {
+                ...state,
+                loading: false,
+                error: action.payload.error
+            }
+            break;
+        case categoryConstants.DELETE_CATEGORY_REQUEST:
+            state = {
+                ...state,
+                loading: true
+            }
+            break;
+        case categoryConstants.DELETE_CATEGORY_SUCCESS:
+            state = {
+                ...state,
+                loading: false
+            }
+            break;
+        case categoryConstants.DELETE_CATEGORY_FAILURE:
+            state = {
+                ...state,
+                loading: false,
+                error: action.payload.error
             }
             break;
     }
